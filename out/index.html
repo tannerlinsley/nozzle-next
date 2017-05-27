@@ -1,0 +1,160 @@
+<!DOCTYPE html><html><head><link rel="preload" href="/_next/45efb69f-11a7-45f1-a756-fe298232ea43/page/index.js" as="script"/><link rel="preload" href="/_next/45efb69f-11a7-45f1-a756-fe298232ea43/page/_error/index.js" as="script"/><link rel="preload" href="/_next/e2440a927705174f26ea72aa8b6b685a/app.js" as="script"/><meta charset="utf-8" class="next-head"/><title class="next-head">This is the default title</title><meta charset="utf-8"/><meta name="viewport" content="initial-scale=1.0, width=device-width"/><link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sanitize.css/2.0.0/sanitize.min.css"/><link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.7.4/tachyons.min.css"/><style type="text/css" data-styled-components="dJqUQW LAZep jVWmab kNqODq" data-styled-components-is-local="true">/* sc-component-id: b7ok5e-0 */
+
+.dJqUQW {display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;min-height: 100vh;-webkit-flex-direction: column;-ms-flex-direction: column;flex-direction: column;}.dJqUQW main {-webkit-flex: 1;-ms-flex: 1;flex: 1;}
+/* sc-component-id: a3johs-0 */
+
+.LAZep {padding: 15px;border-bottom: 1px solid #ddd;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;background: #387EF5;}.LAZep a {padding: 0 15px;color: #FFF;}
+/* sc-component-id: s1b2w2zk-0 */
+
+.kNqODq {padding: 15px;background: #F5F5F5;}
+/* sc-component-id: s75towb-0 */
+
+.jVWmab {border-bottom: 1px solid #ddd;}.jVWmab a {padding: 15px;text-decoration: none;display: block;}.jVWmab a:hover {background: #F5F5F5;}.jVWmab a:hover h3 {color: #387EF5}.jVWmab h3 {color: #222;font-weight: bold;font-size: 1.75rem;line-height: 35px;font-family: "PT Sans", sans-serif;text-transform: capitalize;margin: 0;}.jVWmab p {font-size: 1.2rem;line-height: 35px;color: #444;font-family: "PT Serif", sans-serif;margin: 0;}
+</style><style type="text/css" data-styled-components="" data-styled-components-is-local="false">/* sc-component-id: sc-global-1151470906 */
+ ul {margin: 0;padding: 0;}
+</style></head><body><div class="root"><div><div id="__next"><div data-reactroot="" data-reactid="1" data-react-checksum="1981234353"><footer class="b7ok5e-0 dJqUQW" data-reactid="2"><!-- react-empty: 3 --><header data-reactid="4"><nav class="a3johs-0 LAZep" data-reactid="5"><a href="/" data-reactid="6">Home</a><!-- react-text: 7 --> |<!-- /react-text --><a href="/about/" data-reactid="8">About</a><!-- react-text: 9 --> |<!-- /react-text --><a href="/contact/" data-reactid="10">Contact</a></nav></header><main data-reactid="11"><ul data-reactid="12"><div class="s75towb-0 jVWmab" data-reactid="13"><a href="/blog/ng-tri-toggle-an-angularjs-triple-state-checkbox-directive/" data-reactid="14"><h3 data-reactid="15">ng-Tri-Toggle, an AngularJS Triple-State Checkbox Directive</h3><p data-reactid="16">Determining the “Indeterminate” Issue
+You already know exactly what issue I’m referring to if you’ve ever tried to use a checkbox input with the indeterminate state for something other than a nested checklist. The scenarios are extremely rare, but when come across, people resort to strange ways of creating three way toggleable checkboxes, and hacky select inputs. In Nozzle’s specific situation, we needed a checkbox that could harness 2 “active” or toggleable values, and an off or null state. This would allow us to essentially “turn on” a filter that my have two “on” states eg. an off state, a true state, and a false state.
+A custom directive. Simple and elegant.
+Here, I forewent dealing with checkboxes and select inputs all together, and focused on using angular’s magical databinding and directives to get the job done. Click here for the github repo! The AngularJS Triple-State Checkbox
+The HTML in your template
+&lt;tri-toggle ng-model=&quot;myValue&quot;&gt;&lt;/tri-toggle&gt;
+Results in a toggle capable of three states:
+
+This is the Javascript you don’t see:
+
+    var ngTriToggle = angular.module(&#x27;ngTriToggle&#x27;, []);
+    ngTriToggle
+        .directive(&#x27;triToggle&#x27;, function($timeout) {
+            return {
+                restrict: &#x27;E&#x27;,
+                replace: false,
+                transclude: true,
+                scope: {
+                    ngChange: &#x27;&amp;&#x27;,
+                    val: &#x27;=ngModel&#x27;,
+                    ngTrueVal: &#x27;=?&#x27;,
+                    ngngFalseVal: &#x27;=?&#x27;,
+                    ngNoVal: &#x27;=?&#x27;,
+                    tanner: &#x27;&amp;&#x27;
+                },
+                template: &#x27;&lt;div class=&quot;tri-toggle-wrap&quot; ng-class=&quot;{\&#x27;true\&#x27;: val==ngTrueVal, \&#x27;false\&#x27;: val==ngFalseVal}&quot; ng-click=&quot;toggle()&quot;&gt;&lt;div class=&quot;tri-toggle-false&quot; ng-click=&quot;toggleFalse()&quot;&gt;&lt;/div&gt;&lt;div class=&quot;tri-toggle-true&quot; ng-click=&quot;toggleTrue()&quot;&gt;&lt;/div&gt;&lt;div class=&quot;tri-toggle-handle&quot; ng-click=&quot;toggleNone()&quot;&gt;&lt;/div&gt;&lt;/div&gt;&#x27;,
+                link: function(scope) {
+
+                    if (!angular.isDefined(scope.ngTrueVal)) {
+                        scope.ngTrueVal = 1;
+                    }
+                    if (!angular.isDefined(scope.ngFalseVal)) {
+                        scope.ngFalseVal = 0;
+                    }
+                    if (!angular.isDefined(scope.ngNoVal)) {
+                        scope.ngNoVal = null;
+                    }
+
+                    if (!angular.isDefined(scope.val)) {
+                        scope.val = scope.ngNoVal;
+                    }
+
+                    scope.toggle = function() {
+                        if (scope.val === scope.ngTrueVal) {
+                            scope.val = scope.ngFalseVal;
+                        } else if (scope.val === scope.ngFalseVal) {
+                            scope.val = scope.ngNoVal;
+                        } else {
+                            scope.val = scope.ngTrueVal;
+                        }
+                        if (typeof scope.ngChange != &#x27;undefined&#x27;) {
+                            $timeout(function() {
+                                scope.ngChange(scope.val);
+                            });
+                        }
+                    };
+                },
+            };
+        });
+    
+It gives you the option to define custom true, false and null values:
+
+    &lt;tri-toggle
+        ng-model=&quot;myValue&quot;
+        ng-true-val=&quot;1&quot;
+        ng-false-val=&quot;0&quot;
+        ng-no-val=&quot;-1&quot;&gt;
+    &lt;/tri-toggle&gt;
+
+And also gives you a handy callback:
+
+    &lt;tri-toggle
+        ng-change=&quot;myFunction()&quot;
+        ng-model=&quot;myValue&quot;
+    &lt;/tri-toggle&gt;
+
+Note: This callback is not a watcher. To detect programmatic changes to your model, set up a `$scope.$watch(&#x27;myValue&#x27;)` on your ng-model variable. That’s It!
+
+Now it’s super easy to create as many tri-toggles as you want with absolutely zero checkbox or select input hacking! Enjoy!</p></a></div><div class="s75towb-0 jVWmab" data-reactid="17"><a href="/blog/relative-angularjs-modules/" data-reactid="18"><h3 data-reactid="19">Relative AngularJS Modules</h3><p data-reactid="20">Once upon a time, you built, or planned on building, an large scale Angular application. You probably thought about your file structure and module structure, making sure it fit into a widely used style guide that makes sense. Here at Nozzle, we take our style guides very seriously, and tried to make the best decision on how to modularize, and make our codebase extensible. One problem though, as it seems we could never get rid of were hard-coded image references, and the like. Anything pointing toward a static asset always seemed to start out like so:
+    
+    &lt;img src=&quot;app/path/to/my/assets/images/myImage.png&quot;/&gt;
+
+Assuming that you had a lot of images in your design, you probably got used to using find &gt; replace a lot if your file structure changed. But what if your modules needed to be independent and sandboxed? We’ve come up with a tiny trick to help your modules be completely independent, regardless of where they sit in your file structure. This also opens up some shortcuts for a reverse-like dependency injection (importing one module that contains all references to child modules, or simply using a single child module with its parent as a dependency)
+Enter Relative AngularJS Modules
+Consider the parent module:
+
+    (function() {
+      &#x27;use strict&#x27;;
+    
+      var module = angular.module(&#x27;myApp.things&#x27;, []);
+    
+      var all = angular.module(&#x27;myApp.things.all&#x27;, [
+        &#x27;myApp.things&#x27;,
+        &#x27;things.someThing&#x27;,
+        &#x27;things.someOtherThing&#x27;,
+        &#x27;things.someOtherOtherThing&#x27;,
+      ]);
+
+      module.root = &#x27;/path/to/this/thing/&#x27;;
+
+      module.config(function(stateHelperProvider) {
+        stateHelperProvider.setNestedState({
+            name: &#x27;things&#x27;,
+            url: &#x27;/things&#x27;,
+            templateUrl: module.root + &#x27;directives/things/things.directive.html&#x27;,
+        });
+      });
+    })();
+    
+The module is declared, and a shortcut method for importing it and/or all of its children is also created. Then the module itself gains a paths property on which you can store any path to the root, partials, submodules or whatever else you need. Those properties can then be used to create constants for your module to use in your templates, bind to a scope property for use in image src or any other thing needing a file location. But really, what this allows in child modules is even cooler…
+
+    (function() {
+      &#x27;use strict&#x27;;
+
+      var module = angular.module(&#x27;things.someThing&#x27;, [&#x27;myApp.things&#x27;]);
+      var parent = angular.module(&#x27;myApp.things&#x27;);
+
+      module.root = parent.root + &#x27;sub_module/someThing/&#x27;;
+
+      module.config(function(stateHelperProvider) {
+        stateHelperProvider.setNestedState({
+            name: &#x27;things.someThing&#x27;,
+            url: &quot;/someThing&quot;,
+            templateUrl: module.root + &#x27;someThing.html&#x27;,
+        });
+      });
+    })();
+
+The child module is created with its dependency on the parent module, but then we also reference the parent module itself, then utilize the parent modules paths properties (or constants if you’ve created them) to build the paths for the child module. Those paths can then be accessed the same way by any child modules. This is AWESOME! Because as you can now guess, you can change the location of a module directory in your file structure, and as long as you reflect the changes in your module, all of your template, image, etc references will remain intact!
+Hope this helps!
+Enjoy.</p></a></div><div class="s75towb-0 jVWmab" data-reactid="21"><a href="/blog/authentication-cookies-vs-jwts-and-why-you-re-doing-it-wrong/" data-reactid="22"><h3 data-reactid="23">Authentication: Cookies vs JWTs and why you’re doing it wrong</h3><p data-reactid="24">In preparation for my presentation at UtahJS, here are my slides about how and why to use JWT authentication. I hope to expand this with more code samples soon.
+
+&lt;iframe src=&quot;//www.slideshare.net/slideshow/embed_code/key/KlkmM5Pj0FY2Cb&quot; width=&quot;595&quot; height=&quot;485&quot; frameborder=&quot;0&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; scrolling=&quot;no&quot; style=&quot;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&quot; allowfullscreen&gt;</p></a></div></ul></main><footer class="s1b2w2zk-0 kNqODq" data-reactid="25">Footer</footer></footer></div></div><div id="__next-error"></div></div></div><div><script>
+          __NEXT_DATA__ = {"props":{"posts":[{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"6DUOtWGM2QU6c424G86eCo","type":"Entry","createdAt":"2017-05-27T00:18:29.043Z","updatedAt":"2017-05-27T00:18:29.043Z","revision":1,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"devPost"}},"locale":"en-US"},"fields":{"title":"ng-Tri-Toggle, an AngularJS Triple-State Checkbox Directive","slug":"ng-tri-toggle-an-angularjs-triple-state-checkbox-directive","author":[{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"6XMI2BAaCQ8wsGAkeyAK6e","type":"Entry","createdAt":"2017-05-26T23:54:10.979Z","updatedAt":"2017-05-26T23:54:10.979Z","revision":1,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"1kUEViTN4EmGiEaaeC6ouY"}},"locale":"en-US"},"fields":{"name":"Tanner Linsley","profilePhoto":{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"7m7KDlbTH2Q6C8aQAMyIoY","type":"Asset","createdAt":"2017-05-26T23:53:41.665Z","updatedAt":"2017-05-26T23:53:41.665Z","revision":1,"locale":"en-US"},"fields":{"title":"tanner","file":{"url":"//images.contentful.com/z8uwv83tofbw/7m7KDlbTH2Q6C8aQAMyIoY/089d6ce2a0600e69745ffa9ce9abc7a1/tanner.jpg","details":{"size":40644,"image":{"width":400,"height":400}},"fileName":"tanner.jpg","contentType":"image/jpeg"}}},"biography":"Tanner is obsessive and passionate about Javascript, React, UI/UX, Data Visualization and all things web. He loves problem solving and design, and considers Github his playground. Tanner is always on the edge of the modern software stack loves developing new solutions, frameworks, and systems for complex problems. He is a core contributor to Chart.js, the most popular charting library in the world, and also wrote Jumpsuit.js, which was initially written for Nozzle, but now it's used by thousands of people to build web apps."}}],"body":"Determining the “Indeterminate” Issue\nYou already know exactly what issue I’m referring to if you’ve ever tried to use a checkbox input with the indeterminate state for something other than a nested checklist. The scenarios are extremely rare, but when come across, people resort to strange ways of creating three way toggleable checkboxes, and hacky select inputs. In Nozzle’s specific situation, we needed a checkbox that could harness 2 “active” or toggleable values, and an off or null state. This would allow us to essentially “turn on” a filter that my have two “on” states eg. an off state, a true state, and a false state.\nA custom directive. Simple and elegant.\nHere, I forewent dealing with checkboxes and select inputs all together, and focused on using angular’s magical databinding and directives to get the job done. Click here for the github repo! The AngularJS Triple-State Checkbox\nThe HTML in your template\n\u003ctri-toggle ng-model=\"myValue\"\u003e\u003c/tri-toggle\u003e\nResults in a toggle capable of three states:\n\nThis is the Javascript you don’t see:\n\n    var ngTriToggle = angular.module('ngTriToggle', []);\n    ngTriToggle\n        .directive('triToggle', function($timeout) {\n            return {\n                restrict: 'E',\n                replace: false,\n                transclude: true,\n                scope: {\n                    ngChange: '\u0026',\n                    val: '=ngModel',\n                    ngTrueVal: '=?',\n                    ngngFalseVal: '=?',\n                    ngNoVal: '=?',\n                    tanner: '\u0026'\n                },\n                template: '\u003cdiv class=\"tri-toggle-wrap\" ng-class=\"{\\'true\\': val==ngTrueVal, \\'false\\': val==ngFalseVal}\" ng-click=\"toggle()\"\u003e\u003cdiv class=\"tri-toggle-false\" ng-click=\"toggleFalse()\"\u003e\u003c/div\u003e\u003cdiv class=\"tri-toggle-true\" ng-click=\"toggleTrue()\"\u003e\u003c/div\u003e\u003cdiv class=\"tri-toggle-handle\" ng-click=\"toggleNone()\"\u003e\u003c/div\u003e\u003c/div\u003e',\n                link: function(scope) {\n\n                    if (!angular.isDefined(scope.ngTrueVal)) {\n                        scope.ngTrueVal = 1;\n                    }\n                    if (!angular.isDefined(scope.ngFalseVal)) {\n                        scope.ngFalseVal = 0;\n                    }\n                    if (!angular.isDefined(scope.ngNoVal)) {\n                        scope.ngNoVal = null;\n                    }\n\n                    if (!angular.isDefined(scope.val)) {\n                        scope.val = scope.ngNoVal;\n                    }\n\n                    scope.toggle = function() {\n                        if (scope.val === scope.ngTrueVal) {\n                            scope.val = scope.ngFalseVal;\n                        } else if (scope.val === scope.ngFalseVal) {\n                            scope.val = scope.ngNoVal;\n                        } else {\n                            scope.val = scope.ngTrueVal;\n                        }\n                        if (typeof scope.ngChange != 'undefined') {\n                            $timeout(function() {\n                                scope.ngChange(scope.val);\n                            });\n                        }\n                    };\n                },\n            };\n        });\n    \nIt gives you the option to define custom true, false and null values:\n\n    \u003ctri-toggle\n        ng-model=\"myValue\"\n        ng-true-val=\"1\"\n        ng-false-val=\"0\"\n        ng-no-val=\"-1\"\u003e\n    \u003c/tri-toggle\u003e\n\nAnd also gives you a handy callback:\n\n    \u003ctri-toggle\n        ng-change=\"myFunction()\"\n        ng-model=\"myValue\"\n    \u003c/tri-toggle\u003e\n\nNote: This callback is not a watcher. To detect programmatic changes to your model, set up a `$scope.$watch('myValue')` on your ng-model variable. That’s It!\n\nNow it’s super easy to create as many tri-toggles as you want with absolutely zero checkbox or select input hacking! Enjoy!","category":[{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"3hIm7ovZeoESUckI0esuUe","type":"Entry","createdAt":"2017-05-27T00:06:33.941Z","updatedAt":"2017-05-27T00:07:09.643Z","revision":2,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"devCategory"}},"locale":"en-US"},"fields":{"title":"Front End"}}],"tags":["angular","ui"],"featuredImage":{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"2lclksbC8ocWG2QKYysGIc","type":"Asset","createdAt":"2017-05-27T00:18:07.496Z","updatedAt":"2017-05-27T00:18:07.496Z","revision":1,"locale":"en-US"},"fields":{"title":"ng-tri-toggle","file":{"url":"//images.contentful.com/z8uwv83tofbw/2lclksbC8ocWG2QKYysGIc/8b2e6ae7e48b5c5d99a6b0c8b4261f2f/ng-tri-toggle.png","details":{"size":1011,"image":{"width":125,"height":136}},"fileName":"ng-tri-toggle.png","contentType":"image/png"}}}}},{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"3maTmdTiDK0eQ6IS6YCggM","type":"Entry","createdAt":"2017-05-27T00:12:44.052Z","updatedAt":"2017-05-27T00:15:24.541Z","revision":2,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"devPost"}},"locale":"en-US"},"fields":{"title":"Relative AngularJS Modules","slug":"relative-angularjs-modules","author":[{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"6XMI2BAaCQ8wsGAkeyAK6e","type":"Entry","createdAt":"2017-05-26T23:54:10.979Z","updatedAt":"2017-05-26T23:54:10.979Z","revision":1,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"1kUEViTN4EmGiEaaeC6ouY"}},"locale":"en-US"},"fields":{"name":"Tanner Linsley","profilePhoto":{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"7m7KDlbTH2Q6C8aQAMyIoY","type":"Asset","createdAt":"2017-05-26T23:53:41.665Z","updatedAt":"2017-05-26T23:53:41.665Z","revision":1,"locale":"en-US"},"fields":{"title":"tanner","file":{"url":"//images.contentful.com/z8uwv83tofbw/7m7KDlbTH2Q6C8aQAMyIoY/089d6ce2a0600e69745ffa9ce9abc7a1/tanner.jpg","details":{"size":40644,"image":{"width":400,"height":400}},"fileName":"tanner.jpg","contentType":"image/jpeg"}}},"biography":"Tanner is obsessive and passionate about Javascript, React, UI/UX, Data Visualization and all things web. He loves problem solving and design, and considers Github his playground. Tanner is always on the edge of the modern software stack loves developing new solutions, frameworks, and systems for complex problems. He is a core contributor to Chart.js, the most popular charting library in the world, and also wrote Jumpsuit.js, which was initially written for Nozzle, but now it's used by thousands of people to build web apps."}}],"body":"Once upon a time, you built, or planned on building, an large scale Angular application. You probably thought about your file structure and module structure, making sure it fit into a widely used style guide that makes sense. Here at Nozzle, we take our style guides very seriously, and tried to make the best decision on how to modularize, and make our codebase extensible. One problem though, as it seems we could never get rid of were hard-coded image references, and the like. Anything pointing toward a static asset always seemed to start out like so:\n    \n    \u003cimg src=\"app/path/to/my/assets/images/myImage.png\"/\u003e\n\nAssuming that you had a lot of images in your design, you probably got used to using find \u003e replace a lot if your file structure changed. But what if your modules needed to be independent and sandboxed? We’ve come up with a tiny trick to help your modules be completely independent, regardless of where they sit in your file structure. This also opens up some shortcuts for a reverse-like dependency injection (importing one module that contains all references to child modules, or simply using a single child module with its parent as a dependency)\nEnter Relative AngularJS Modules\nConsider the parent module:\n\n    (function() {\n      'use strict';\n    \n      var module = angular.module('myApp.things', []);\n    \n      var all = angular.module('myApp.things.all', [\n        'myApp.things',\n        'things.someThing',\n        'things.someOtherThing',\n        'things.someOtherOtherThing',\n      ]);\n\n      module.root = '/path/to/this/thing/';\n\n      module.config(function(stateHelperProvider) {\n        stateHelperProvider.setNestedState({\n            name: 'things',\n            url: '/things',\n            templateUrl: module.root + 'directives/things/things.directive.html',\n        });\n      });\n    })();\n    \nThe module is declared, and a shortcut method for importing it and/or all of its children is also created. Then the module itself gains a paths property on which you can store any path to the root, partials, submodules or whatever else you need. Those properties can then be used to create constants for your module to use in your templates, bind to a scope property for use in image src or any other thing needing a file location. But really, what this allows in child modules is even cooler…\n\n    (function() {\n      'use strict';\n\n      var module = angular.module('things.someThing', ['myApp.things']);\n      var parent = angular.module('myApp.things');\n\n      module.root = parent.root + 'sub_module/someThing/';\n\n      module.config(function(stateHelperProvider) {\n        stateHelperProvider.setNestedState({\n            name: 'things.someThing',\n            url: \"/someThing\",\n            templateUrl: module.root + 'someThing.html',\n        });\n      });\n    })();\n\nThe child module is created with its dependency on the parent module, but then we also reference the parent module itself, then utilize the parent modules paths properties (or constants if you’ve created them) to build the paths for the child module. Those paths can then be accessed the same way by any child modules. This is AWESOME! Because as you can now guess, you can change the location of a module directory in your file structure, and as long as you reflect the changes in your module, all of your template, image, etc references will remain intact!\nHope this helps!\nEnjoy.","category":[{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"3hIm7ovZeoESUckI0esuUe","type":"Entry","createdAt":"2017-05-27T00:06:33.941Z","updatedAt":"2017-05-27T00:07:09.643Z","revision":2,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"devCategory"}},"locale":"en-US"},"fields":{"title":"Front End"}}],"featuredImage":{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"5P0Vc2th60GUICYYuOUEM0","type":"Asset","createdAt":"2017-05-27T00:12:17.943Z","updatedAt":"2017-05-27T00:12:17.943Z","revision":1,"locale":"en-US"},"fields":{"title":"Screen Shot 2017-05-26 at 6.11.57 PM","file":{"url":"//images.contentful.com/z8uwv83tofbw/5P0Vc2th60GUICYYuOUEM0/660f3cca743c032eebb81b4c9c7c63ec/Screen_Shot_2017-05-26_at_6.11.57_PM.png","details":{"size":94092,"image":{"width":541,"height":465}},"fileName":"Screen Shot 2017-05-26 at 6.11.57 PM.png","contentType":"image/png"}}},"date":"2017-05-26"}},{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"6xyqzFy3mMyM0uYee44E2w","type":"Entry","createdAt":"2017-05-27T00:22:55.615Z","updatedAt":"2017-05-27T00:22:55.615Z","revision":1,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"devPost"}},"locale":"en-US"},"fields":{"title":"Authentication: Cookies vs JWTs and why you’re doing it wrong","slug":"authentication-cookies-vs-jwts-and-why-you-re-doing-it-wrong","author":[{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"1bqi4ZLbQWIMsW0eIuaMiQ","type":"Entry","createdAt":"2017-05-26T23:54:57.340Z","updatedAt":"2017-05-26T23:54:57.340Z","revision":1,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"1kUEViTN4EmGiEaaeC6ouY"}},"locale":"en-US"},"fields":{"name":"Derek Perkins","profilePhoto":{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"3auYhiW5S0Q0OiQUsiaw8K","type":"Asset","createdAt":"2017-05-26T23:54:44.892Z","updatedAt":"2017-05-26T23:54:44.892Z","revision":1,"locale":"en-US"},"fields":{"title":"derek","file":{"url":"//images.contentful.com/z8uwv83tofbw/3auYhiW5S0Q0OiQUsiaw8K/05bd1ead209a80fe9205e2b0b61c576e/derek.jpg","details":{"size":36485,"image":{"width":391,"height":391}},"fileName":"derek.jpg","contentType":"image/jpeg"}}},"biography":"Derek is a golang developer. He writes a lot of backend code, but also does the business side. He is an experienced entrepreneur, and enjoys the startup battlefield. He enjoys short walks on the beach and triple-OREO ice cream."}}],"body":"In preparation for my presentation at UtahJS, here are my slides about how and why to use JWT authentication. I hope to expand this with more code samples soon.\n\n\u003ciframe src=\"//www.slideshare.net/slideshow/embed_code/key/KlkmM5Pj0FY2Cb\" width=\"595\" height=\"485\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" style=\"border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;\" allowfullscreen\u003e","category":[{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"6hw1jvmx4AcuWIgOCS8WOU","type":"Entry","createdAt":"2017-05-27T00:07:02.168Z","updatedAt":"2017-05-27T00:07:02.168Z","revision":1,"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"devCategory"}},"locale":"en-US"},"fields":{"title":"Backend"}}],"tags":["security","authentication","jwt"],"featuredImage":{"sys":{"space":{"sys":{"type":"Link","linkType":"Space","id":"z8uwv83tofbw"}},"id":"4wkfDeHmw88AoWCyS84qou","type":"Asset","createdAt":"2017-05-27T00:22:45.729Z","updatedAt":"2017-05-27T00:22:45.729Z","revision":1,"locale":"en-US"},"fields":{"title":"Screen Shot 2017-05-26 at 6.22.30 PM","file":{"url":"//images.contentful.com/z8uwv83tofbw/4wkfDeHmw88AoWCyS84qou/08e9a4ea02c57d0568508cc39dbd0460/Screen_Shot_2017-05-26_at_6.22.30_PM.png","details":{"size":18006,"image":{"width":562,"height":385}},"fileName":"Screen Shot 2017-05-26 at 6.22.30 PM.png","contentType":"image/png"}}}}}]},"pathname":"/","buildId":"45efb69f-11a7-45f1-a756-fe298232ea43","buildStats":{"app.js":{"hash":"e2440a927705174f26ea72aa8b6b685a"}},"assetPrefix":"","nextExport":true,"err":null,"chunks":[]}
+          module={}
+          __NEXT_LOADED_PAGES__ = []
+          __NEXT_LOADED_CHUNKS__ = []
+
+          __NEXT_REGISTER_PAGE = function (route, fn) {
+            __NEXT_LOADED_PAGES__.push({ route: route, fn: fn })
+          }
+
+          __NEXT_REGISTER_CHUNK = function (chunkName, fn) {
+            __NEXT_LOADED_CHUNKS__.push({ chunkName: chunkName, fn: fn })
+          }
+        </script><script async="" id="__NEXT_PAGE__/" type="text/javascript" src="/_next/45efb69f-11a7-45f1-a756-fe298232ea43/page/index.js"></script><script async="" id="__NEXT_PAGE__/_error" type="text/javascript" src="/_next/45efb69f-11a7-45f1-a756-fe298232ea43/page/_error/index.js"></script><div></div><script type="text/javascript" src="/_next/e2440a927705174f26ea72aa8b6b685a/app.js" async=""></script></div></body></html>

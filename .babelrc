@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "es2015",
+    "stage-2",
+    "next/babel"
+  ],
+  "plugins": [
+    ["styled-components", { "ssr": true, "displayName": true, "preprocess": false } ],
+    ["module-resolver", {
+      "root": ["./"]
+    }]
+  ]
+}
